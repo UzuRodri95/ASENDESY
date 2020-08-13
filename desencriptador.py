@@ -16,9 +16,13 @@ class Desencriptador:
             palabra_desencriptada += chr(valor)
         return palabra_desencriptada[::-1]
 
-    def desencripto_texto(self,texto,password):
+    def desencripto_diccionario(self,dicEncriptado,password):
         password_procesada = self.proceso_password(password)
-        for palabra in texto:
+        palabras_encriptadas = dicEncriptado.keys()
+
+        for palabra in palabras_encriptadas:
+            posiciones = dicEncriptado.get(palabra)
             palabra = self.desencripto_palabra(palabra, password_procesada)
-            self.texto_desencriptado.insert(0, palabra)
+            for posicion in posiciones:
+                    self.texto_desencriptado.insert(posicion, palabra)
         return self.texto_desencriptado

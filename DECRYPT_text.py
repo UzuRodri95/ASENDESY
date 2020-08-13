@@ -1,7 +1,8 @@
 from argparse import ArgumentParser
-import sys
 from desencriptador import Desencriptador
+import sys
 import os
+import pickle
 
 if __name__ == "__main__":
     #ARGUMENTS OPTIONS ARE ADDED
@@ -14,25 +15,22 @@ if __name__ == "__main__":
     decrypt = Desencriptador()
 
     #FILE THATS GONNA BE ENCRYPTED IS OPEN FOR BEING READ AND WE CREATE A NEW FILE FOR THE OUTPUT
-    input = open(args.fichero,'r')
+
     if args.fichero.endswith(".cryp"):
-        output = open(args.fichero + ".decryp", "w")
+        #Cargamos el fichero en input y sacamos de el el diccionario
+        input = open(args.fichero,'rb')
+        dicEncriptado = pickle.load(input)
+
+        #print(contenidoFichero)
+        #Creamos el fichero donde se va a desencriptar el archivo.
+        outputFichero = open(args.fichero[0:-5] + "_DECRYPTED" + ".txt", "w")
         passw = args.password
 
-        #TEXT IS ASSIGNED TO mensaje
-        mensaje = input.read()
+        textoDesencriptado = decrypt.desencripto_diccionario(dicEncriptado, passw)
+        textoDesencriptado = " ".join(textoDesencriptado)
+        outputFichero.write(textoDesencriptado)
 
-        #TEXT IS SPLITED BY " " AND ASSIGNED IN mensaje_split
-        mensaje_split = mensaje.split()
-
-        #TEXT IS ENCRYPTED BY THE FUNCTION OF Encriptador CLASS AND ASSIGNED TO texto_encriptado_split
-        texto_desencriptado_split = decrypt.desencripto_texto(mensaje_split,passw)
-
-        #TEXT IS JOINED BY " " AND ASSIGNED TO texto_encriptado
-        texto_desencriptado = " ".join(texto_desencriptado_split)
-        output.write(texto_desencriptado)
-        output.close()
+        input.close()
+        outputFichero.close()
     else:
         print("Error in file format, must be .cryp")
-        input.close()
-    

@@ -1,35 +1,48 @@
 from argparse import ArgumentParser
-import sys
 from encriptador import Encriptador
+import sys
 import os
+import pickle
+import time
 
 if __name__ == "__main__":
-    #ARGUMENTS OPTIONS ARE ADDED
+    #Argumentos para pasar por parametro
     parser = ArgumentParser(description='%(prog)s is an ArgumentParser demo')
     parser.add_argument('fichero', type=str, help='ayuda del fichero')
     parser.add_argument('password', type=str, help='contraseña')
 
-    #INITIALIZE ARGUMENTS AND THE OBJECT ENCRYPT
+    #Inicializamos el contenedor de los argumentos y el objeto de la clase Encriptador
     args = parser.parse_args()
     encrypt = Encriptador()
 
-    #FILE THATS GONNA BE ENCRYPTED IS OPEN FOR BEING READ AND WE CREATE A NEW FILE FOR THE OUTPUT
-    input = open(args.fichero,'r')
-    output = open(args.fichero + ".cryp", "w")
+    print("\n\t", "#"*60)
+    print("\t","#"*20," ENCRIPTADOR v1.1 ","#"*20)
+    print("\t", "#"*60,"\n")
+
+    input = open(args.fichero,'r')                                  #Fichero de entrada de texto normal
+    ficheroOutput = open(args.fichero[0:-4] + ".cryp", "wb")        #Fichero de salida con el diccionario encriptado
+
+    print("\tEL FICHERO", input.name, "VA A SER ENCRIPTADO")
+    time.sleep(1)
+    print("\n\tENCRIPTANDO")
+    time.sleep(1)
+    print("\t.")
+    time.sleep(1)
+    print("\t.")
+    time.sleep(1)
+    print("\t.")
+
     passw = args.password
 
-    #TEXT IS ASSIGNED TO mensaje
+    #Leemos el texto y lo separamos por espacios
     mensaje = input.read()
-
-    #TEXT IS SPLITED BY " " AND ASSIGNED IN mensaje_split
     mensaje_split = mensaje.split()
 
-    #TEXT IS ENCRYPTED BY THE FUNCTION OF Encriptador CLASS AND ASSIGNED TO texto_encriptado_split
-    texto_encriptado_split = encrypt.encripto_texto(mensaje_split,passw)
+    diccionarioEncriptacion = encrypt.encripto_texto(mensaje_split,passw)
 
-    #TEXT IS JOINED BY " " AND ASSIGNED TO texto_encriptado
-    texto_encriptado = " ".join(texto_encriptado_split)
-    print(texto_encriptado)
-    output.write(texto_encriptado)
+    pickle.dump(diccionarioEncriptacion, ficheroOutput)
+
+    print("\tEL FICHERO", ficheroOutput.name, "HA SIDO CREADO CON EXITO")
+
     input.close()
-    output.close()
+    ficheroOutput.close()
